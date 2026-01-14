@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G11 Tutor Hub</title>
+    <style>
+        /* CSS Styling - Giao diện Dark Mode xịn xò */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #1a1a1a; color: #fff; }
+        .container { max-width: 400px; margin: 0 auto; min-height: 100vh; background-color: #252525; position: relative; overflow: hidden; border-left: 1px solid #333; border-right: 1px solid #333; }
+        
+        /* Utility Classes */
+        .hidden { display: none !important; }
+        .btn { width: 100%; padding: 12px; margin: 10px 0; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-primary { background-color: #6c5ce7; color: white; }
+        .btn-secondary { background-color: #00b894; color: white; }
+        .btn:hover { opacity: 0.9; transform: scale(1.02); }
+        input { width: 90%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #444; background: #333; color: white; outline: none; }
+        input:focus { border-color: #6c5ce7; }
+
+        /* Screens */
+        #login-screen, #subject-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; padding: 20px; text-align: center; }
+        
+        /* Dashboard */
+        #dashboard { height: 100vh; display: flex; flex-direction: column; }
+        .header { padding: 20px; background: #6c5ce7; text-align: center; font-weight: bold; font-size: 18px; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        .content-area { flex: 1; padding: 20px; overflow-y: auto; }
+        
+        /* Nav Bar */
+        .nav-bar { display: flex; justify-content: space-around; background: #2d3436; padding: 15px 0; position: sticky; bottom: 0; border-top: 1px solid #444; }
+        .nav-item { cursor: pointer; color: #aaa; font-size: 12px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+        .nav-item span { font-size: 18px; margin-bottom: 2px; }
+        .nav-item.active { color: #6c5ce7; font-weight: bold; }
+
+        /* Components inside Dashboard */
+        .price-card { background: #333; padding: 20px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #444; transition: 0.3s; }
+        .price-card:hover { border-color: #6c5ce7; }
+        .price-tag { color: #00b894; font-size: 1.5em; font-weight: bold; margin: 10px 0; }
+        
+        .chat-box { height: 350px; overflow-y: scroll; border: 1px solid #444; padding: 15px; margin-bottom: 10px; border-radius: 8px; background: #1e1e1e; display: flex; flex-direction: column; gap: 10px; }
+        .msg { padding: 10px 14px; border-radius: 15px; max-width: 75%; font-size: 14px; line-height: 1.4; word-wrap: break-word; }
+        .msg.admin { background: #444; align-self: flex-start; border-bottom-left-radius: 2px; }
+        .msg.user { background: #6c5ce7; align-self: flex-end; color: white; border-bottom-right-radius: 2px; }
+
+        .resource-item { background: #333; padding: 15px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #444; }
+        .live-class { background: linear-gradient(135deg, #ff7675, #d63031); padding: 30px; border-radius: 15px; text-align: center; margin-top: 20px; box-shadow: 0 4px 15px rgba(214, 48, 49, 0.4); }
+        
+        /* Scrollbar custom */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #1a1a1a; }
+        ::-webkit-scrollbar-thumb { background: #555; border-radius: 5px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="login-screen">
+            <h1 style="margin-bottom: 5px;">🎓 TutorHub</h1>
+            <p style="color: #aaa; margin-bottom: 30px;">Grade 11 • Math & Physics</p>
+            
+            <input type="text" placeholder="Username" id="username">
+            <input type="password" placeholder="Password" id="password">
+            <button class="btn btn-primary" onclick="handleLogin()">Log In</button>
+            <p style="font-size: 12px; color: #666; margin-top: 20px;">Forgot password? Contact Admin.</p>
+        </div>
+
+        <div id="subject-screen" class="hidden">
+            <h2>📚 Select Subject</h2>
+            <p style="color: #aaa;">Which class do you want to join?</p>
+            <br>
+            <button class="btn btn-primary" onclick="selectSubject('Mathematics')">
+                <span style="font-size: 20px;">📐</span><br>Mathematics
+            </button>
+            <button class="btn btn-secondary" onclick="selectSubject('Physics')">
+                <span style="font-size: 20px;">⚛️</span><br>Physics
+            </button>
+        </div>
+
+        <div id="dashboard" class="hidden">
+            <div class="header">
+                <span id="current-subject">Math</span> Class
+            </div>
+            
+            <div class="content-area">
+                <div id="section-pricing">
+                    <h3>💰 Subscription Plans</h3>
+                    <div class="price-card">
+                        <h4>Standard Pack</h4>
+                        <div class="price-tag">$50 <span style="font-size: 12px; color: #aaa;">/month</span></div>
+                        <ul style="text-align: left; font-size: 13px; color: #ccc; padding-left: 20px;">
+                            <li>Weekly Homework</li>
+                            <li>Chat Support (9AM - 5PM)</li>
+                        </ul>
+                        <button class="btn btn-primary" onclick="alert('Contacting Admin for Standard Pack...')">Choose Plan</button>
+                    </div>
+                    <div class="price-card">
+                        <h4>Premium Pack</h4>
+                        <div class="price-tag">$120 <span style="font-size: 12px; color: #aaa;">/month</span></div>
+                        <ul style="text-align: left; font-size: 13px; color: #ccc; padding-left: 20px;">
+                            <li>1-on-1 Live Tutoring</li>
+                            <li>24/7 Priority Chat</li>
+                            <li>Exam Prep Materials</li>
+                        </ul>
+                        <button class="btn btn-secondary" onclick="alert('Contacting Admin for Premium Pack...')">Choose Plan</button>
+                    </div>
+                </div>
+
+                <div id="section-chat" class="hidden">
+                    <div style="text-align: center; margin-bottom: 10px; font-size: 12px; color: #aaa;">
+                        Chatting with <strong>Admin/Tutor</strong>
+                    </div>
+                    <div class="chat-box" id="chat-display">
+                        <div class="msg admin">Hello! Welcome to the class. Do you have any questions about the exercises?</div>
+                    </div>
+                    <div style="display: flex; align-items: center;">
+                        <input type="text" id="chat-input" placeholder="Type a message..." style="flex: 1; margin: 0;">
+                        <button class="btn btn-primary" style="width: auto; padding: 12px 20px; margin: 0 0 0 8px;" onclick="sendMessage()">➤</button>
+                    </div>
+                </div>
+
+                <div id="section-resources" class="hidden">
+                    <h3>📂 Learning Materials</h3>
+                    <div class="resource-item">
+                        <div>
+                            <div style="font-weight: bold;">Algebra Chapter 3.pdf</div>
+                            <div style="font-size: 11px; color: #aaa;">Uploaded: 2 hours ago</div>
+                        </div>
+                        <button style="background:none; border:none; cursor: pointer; font-size: 20px;">⬇️</button>
+                    </div>
+                    <div class="resource-item">
+                        <div>
+                            <div style="font-weight: bold;">Mid-term Test G11.docx</div>
+                            <div style="font-size: 11px; color: #aaa;">Uploaded: Yesterday</div>
+                        </div>
+                        <button style="background:none; border:none; cursor: pointer; font-size: 20px;">⬇️</button>
+                    </div>
+                    <div class="resource-item">
+                        <div>
+                            <div style="font-weight: bold;">Physics Lab Report.pdf</div>
+                            <div style="font-size: 11px; color: #aaa;">Uploaded: 1 week ago</div>
+                        </div>
+                        <button style="background:none; border:none; cursor: pointer; font-size: 20px;">⬇️</button>
+                    </div>
+                </div>
+
+                <div id="section-class" class="hidden">
+                    <h3>🎓 Live Classroom</h3>
+                    <div class="live-class">
+                        <h2 style="margin: 0;">🔴 LIVE STREAM</h2>
+                        <p style="margin: 10px 0;">Topic: Newton's Laws</p>
+                        <button class="btn" style="background: white; color: #d63031; font-weight: bold;">Join Now</button>
+                    </div>
+                    
+                    <div style="margin-top: 30px;">
+                        <h4>Upcoming Sessions</h4>
+                        <div style="background: #333; padding: 10px; border-radius: 8px; margin-top: 10px; display: flex; gap: 10px; align-items: center;">
+                            <div style="background: #444; padding: 10px; border-radius: 5px; text-align: center;">
+                                <div style="font-weight: bold; color: #6c5ce7;">15</div>
+                                <div style="font-size: 10px;">JAN</div>
+                            </div>
+                            <div>
+                                <div style="font-weight: bold;">Calculus Intro</div>
+                                <div style="font-size: 12px; color: #aaa;">08:00 PM - 09:30 PM</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-bar">
+                <div class="nav-item active" onclick="navTo('pricing', this)">
+                    <span>💲</span> Prices
+                </div>
+                <div class="nav-item" onclick="navTo('chat', this)">
+                    <span>💬</span> Chat
+                </div>
+                <div class="nav-item" onclick="navTo('resources', this)">
+                    <span>📂</span> Files
+                </div>
+                <div class="nav-item" onclick="navTo('class', this)">
+                    <span>🎓</span> Class
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Logic xử lý chuyển trang
+        function handleLogin() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            
+            if(user && pass) {
+                // Giả lập login thành công
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('subject-screen').classList.remove('hidden');
+            } else {
+                alert("Please enter both Username and Password!");
+            }
+        }
+
+        function selectSubject(subject) {
+            document.getElementById('current-subject').innerText = subject;
+            document.getElementById('subject-screen').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+        }
+
+        function navTo(sectionId, element) {
+            // Hide all sections
+            ['pricing', 'chat', 'resources', 'class'].forEach(id => {
+                document.getElementById('section-' + id).classList.add('hidden');
+            });
+            // Show selected section
+            document.getElementById('section-' + sectionId).classList.remove('hidden');
+            
+            // Update active nav styling
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const chatBox = document.getElementById('chat-display');
+            if(input.value.trim() !== "") {
+                // Add user message
+                chatBox.innerHTML += `<div class="msg user">${input.value}</div>`;
+                const userMsg = input.value; // Store msg for logic if needed
+                input.value = "";
+                
+                // Auto scroll to bottom
+                chatBox.scrollTop = chatBox.scrollHeight;
+
+                // Fake Admin reply logic
+                setTimeout(() => {
+                    let reply = "Thanks for your message. An admin will be with you shortly.";
+                    if(userMsg.toLowerCase().includes("hello") || userMsg.toLowerCase().includes("hi")) {
+                        reply = "Hi there! Ready to learn some Math/Physics?";
+                    } else if (userMsg.toLowerCase().includes("price")) {
+                        reply = "You can check the Pricing tab for details!";
+                    }
+
+                    chatBox.innerHTML += `<div class="msg admin">${reply}</div>`;
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }, 1000);
+            }
+        }
+        
+        // Allow "Enter" key to send message
+        document.getElementById("chat-input").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
